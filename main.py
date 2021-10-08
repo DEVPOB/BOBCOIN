@@ -1,6 +1,4 @@
-#880963590289498142 client ID
-#ODgwOTYzNTkwMjg5NDk4MTQy.YSl7Rw.ogiXuL6XzkAyoebhB2u-Y3PV6cc Token
-#8
+
 
 from asyncio.tasks import wait_for
 from typing import Text
@@ -409,4 +407,4 @@ async def command(ctx):
     await ctx.send(embed = em)
 
 
-bot.run('ODgwOTYzNTkwMjg5NDk4MTQy.YSl7Rw.ogiXuL6XzkAyoebhB2u-Y3PV6cc')
+bot.run('Token')
