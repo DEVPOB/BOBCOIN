@@ -1,9 +1,3 @@
-#880963590289498142 client ID
-#ODgwOTYzNTkwMjg5NDk4MTQy.YSl7Rw.ogiXuL6XzkAyoebhB2u-Y3PV6cc Token
-#8
-
-
-
 import discord
 import random
 import asyncio
