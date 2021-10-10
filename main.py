@@ -1,4 +1,4 @@
-import discord
+#discord.py version == 1.7.3
 import random
 import asyncio
 from datetime import date, datetime, time,timedelta
@@ -38,6 +38,7 @@ async def on_command_error(ctx,error):
 async def stonk(ctx, user: discord.Member = None):
     if user == None:
         user = ctx.author
+
     rich = Image.open("pic.jpg")
     asset = user.avatar_url_as(size = 128)
     data = BytesIO(await asset.read())
@@ -61,21 +62,26 @@ async def calR(ctx,a:int,b:int):
     width = a
     height = b
     cal = width * height
-    await ctx.send('สูตร:')
-    await ctx.send('กว้าง * ยาว = พื้นที่รูปสี่เหลื่ยม')
-    await ctx.send(f'{width}(กว้าง) * {height}(ยาว) = (การหาพื้นที่รูปสี่เหลื่ยม){cal}')
+    em = discord.Embed(title="$calR = width * height",color = discord.Color.green())
+    em.set_footer(text = f'พื้นที่ของรูปสี่เหลื่ยม{width} * {height} = {cal}',icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
+    
 @bot.command()
 async def calT(ctx,a:int,b:int):
     side = a
     height = b
     cal =  side * height / 2
-    await ctx.send(f'1/2 * {side} * {height} = {cal}')
+    em = discord.Embed(title="$cal",color = discord.Color.green())
+    em.set_footer(test = f'พื้นที่รูปสี่เหลี่ยมคางหมู{side} * {height} = {cal}',icon_url="https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
 @bot.command()
 async def calP(ctx,a:int,b:int):
     base = a
     height = b
     cal = base * height
-    await ctx.send(f'{base} * {height} = {cal}')
+    em = discord.Embed(title="$calP = base * height",color = discord.Color.green())
+    em.set_footer(test = f'พื้นที่รูปสี่เหลี่ยมด้านขนาน{base} * {height} = {cal}',icon_url="https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
 
 @bot.command()
 async def clear(ctx, amount=1000):
@@ -96,10 +102,10 @@ async def mrp(ctx):
     em.set_thumbnail(url = f"https://image.freepik.com/free-vector/isometric-cinema-icon-set_1284-18691.jpg")
     em.set_footer(text = "ขอให้สนุกน้าาาาา",icon_url = "https://image.similarpng.com/very-thumbnail/2020/06/Icon-like-button-transparent-PNG.png")
     await ctx.send(embed=em)        
-# @bot.command()
-# @commands.has_any_role('!!OVB!!#6670', 'ผู้บัญชาการขอทานแห่งชาติ', 492212595072434186)
-# async def cool(ctx):
-#     await ctx.send('You are cool indeed')
+@bot.command()
+@commands.has_any_role('DEV')
+async def cool(ctx):
+    await ctx.send('You are cool indeed')
 
 @bot.command()
 async def wait(ctx):
@@ -127,12 +133,16 @@ async def emoji(ctx,*,text):
         
     await ctx.send(''.join(emoji))
 
+    
+
 @bot.command()
 async def calC(ctx,*,text):
     r = float(text) 
     c = 3.14159265358979323846264338327950288419716939937510582097494459230781650628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852 * r**2
-    await ctx.send(f'พื้นที่วงกลม:\t{c}')
-
+    cal = r*c
+    em = discord.Embed(title="$calP = base * height",color = discord.Color.green())
+    em.set_footer(test = f'พื้นที่รูปสี่เหลี่ยมด้านขนาน{r} * {c} = {cal}',icon_url="https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
 @bot.command()
 async def Backpack(ctx):
     await open_account(ctx.author)
@@ -211,6 +221,47 @@ async def QM(ctx):
             await ctx.send("แต่ไม่เป็นไรรางวัลปลอบใจ 10 บาท")
             await update_bank(ctx.author,10)
             return 
+
+@bot.command(pass_context=True)
+@commands.has_permissions(manage_messages=True)
+async def shop(ctx,member:discord.Member = None,*,role:discord.Role = None):
+    await open_account(ctx.author)
+    if member == None:
+        await ctx.send("ใส่ชื่อที่จะซื้อของให้")
+    if role == None:
+        await ctx.send("ใส่สิ่งของที่ต้องการ")
+    await member.add_roles(role)
+    await ctx.send(f"{member} was given {role}")
+    await update_bank(ctx.author,-1000)
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+@commands.has_any_role('Profile')
+async def BD(ctx,member:discord.Member = None,*,role:discord.Role = None):
+    await open_account(ctx.author)
+    if member == None:
+        await ctx.send("ใส่ชื่อที่จะซื้อของให้")
+    if role == None:
+        await ctx.send("ใส่สิ่งของที่ต้องการ")
+    await member.add_roles(role)
+    await update_bank(ctx.author,-100000)
+
+
+@bot.command()
+@commands.has_any_role('WATCH')
+async def watch(ctx):
+    await ctx.send(datetime.today().strftime("Day %d Month %m Year %Y |Time %H:%M"))
+@bot.command()
+@commands.has_any_role('Profile')
+async def profile(ctx,member:discord.Member = None):
+    member = ctx.author if member == None else member
+    em = discord.Embed(colour=member.color, timestamp=ctx.message.created_at)
+    em.set_author(name=f"{member}'s profile")
+    em.set_thumbnail(url=member.avatar_url)
+    em.add_field(name="ID", value=member.id)
+    em.add_field(name="Account created at", value=member.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
+    em.add_field(name="Joined at", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"))
+    await ctx.send(embed=em)
 
 
 @bot.command()
@@ -362,37 +413,64 @@ async def ER(ctx):
   message = await ctx.send("hello")
   await asyncio.sleep(1)
   await message.edit(content="newcontent")
-
 @bot.command()
-async def command(ctx):
-
-    em = discord.Embed(title = "Info",
-        description = "prefix $\nคำสั่งตามด้วย[TC] = Test Command\nคำสั่งตามด้วย[FT] = Feature Command",
-        color = discord.Color.purple())
-    em.set_author(name = "BOBCOIN COMMANDS",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+async def item(ctx):
+    await ctx.send("@watch | @Profile")
+@bot.command()
+async def TC(ctx):
+    em = discord.Embed(title = f"BOB's BOBCOIN",description = "Test Command For Develop New Feature",colour = discord.Color.green())
+    em.set_author(name = "Discord.py Command",icon_url="https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
     em.add_field(name = "DTC ตามด้วยข้อความ [TC]",value = "Test image(TYPE TEXT) manipulation",inline = False)
     em.add_field(name = "stonk ตามด้วย@user [TC]",value = "Test image(TYPE USER) manipulation",inline = False)
     em.add_field(name = "ER [TC]",value = "Test Message Edit",inline = False)
     em.add_field(name = "TestJson [TC]",value = "Test Money Given System",inline = False)
     em.add_field(name = "wait [TC]",value = "Test Asyncio",inline = False)
+    em.add_field(name = "reaction [TC]",value = "Test Reaction",inline = False)
+    em.set_thumbnail(url = "https://cdn.dribbble.com/users/104807/screenshots/2557466/list-to-grid.gif")
+    em.set_footer(text = "| บ อ ท แ ห่ ง ช น ชั้ น น |",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
+@bot.command()
+async def ECO(ctx):
+    em = discord.Embed(title = f"BOB's BOBCOIN",description = "BOB Economy command",colour = discord.Color.orange())
+    em.set_author(name = "Economy Command",icon_url="https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    em.add_field(name = "deposit [ECO]",value = "Deposit BOBCOIN Feature",inline = False)
+    em.add_field(name = "withdraw [ECO]",value = "Withdraw From BOB Bank Feature",inline = False)
+    em.add_field(name = "Backpack [ECO]",value = "Check Your Backpack Feature",inline = False)
+    em.add_field(name = "lottery ตามด้วยตัวเลข 5 หลัก [ECO]",value = "Lottery Feature",inline = False)
+    em.add_field(name = "slot ตามด้วยเงินพนัน [ECO]",value = "Slot Feature",inline = False)
+    em.add_field(name = "leaderboard [FT]",value = "Leader board Feature",inline = False)
+    em.add_field(name = "shop @user @item[FT]",value = "Shop Feature",inline = False)
+    em.add_field(name = "filpcoin [FT]",value = "Flip Coin Feature",inline = False)
+    em.add_field(name = "item [FT]",value="Item Feature",inline = False)
     em.add_field(name = "QM [FT]",value = "Quick Math Feature",inline = False)
+    em.set_thumbnail(url = "https://i.pinimg.com/originals/de/4a/90/de4a9060d587b1e7d18d2048c1eec080.gif")
+    em.set_footer(text = "| บ อ ท แ ห่ ง ช น ชั้ น น |",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
+
+@bot.command()
+async def FT(ctx):
+    em = discord.Embed(title = f"BOB's BOBCOIN",description = "BOB Feature Command",colour = discord.Color.light_grey())
+    em.add_field(name = "emoji ตามด้วยข้อความ(ENG ONLY) [FT]",value = "Convert Text To Emoji Feature",inline = False)
+    em.add_field(name = "mrp [FT]",value = "Recommend Moive Feature",inline = False)
     em.add_field(name = "calP ตามด้วย ฐาน(ตัวเลข) และ สูง(ตัวเลข) [FT]",value = "Calculator Paralleogram Feature",inline = False)
     em.add_field(name = "calR ตามด้วย กว้าง(ตัวเลข) และ ยาว(ตัวเลข) [FT]",value = "Calculator Rectangle Feature",inline = False)
     em.add_field(name = "calT ตามด้วย ผลบวกด้านคู่ขนาน(ตัวเลข) และ สูง(ตัวเลข) [FT]",value = "Calculator Trapezoid Feature",inline = False)
     em.add_field(name = "calC ตามด้วย รัศมี(ตัวเลข) [FT]",value = "Calculator Circle Feature",inline = False)
-    em.add_field(name = "clear [FT]",value = "Delete Message Feature",inline = False)
     em.add_field(name = "invite [FT]",value = "Invite BOB's BOBCOIN Feature",inline = False)
-    em.add_field(name = "deposit [FT]",value = "Deposit BOBCOIN Feature",inline = False)
-    em.add_field(name = "withdraw [FT]",value = "Withdraw From BOB Bank Feature",inline = False)
-    em.add_field(name = "Backpack [FT]",value = "Check Your Backpack Feature",inline = False)
-    em.add_field(name = "lottery ตามด้วยตัวเลข 5 หลัก [FT]",value = "Lottery Feature",inline = False)
-    em.add_field(name = "slot ตามด้วยเงินพนัน [FT]",value = "Slot Feature",inline = False)
-    em.add_field(name = "leaderboard [FT]",value = "Leader board Feature",inline = False)
-    #em.add_field(name = "coinflip [FT]",value = "Coin Flip Feature",inline = False)
-    em.add_field(name = "emoji ตามด้วยข้อความ(ENG ONLY) [FT]",value = "Convert Text To Emoji Feature",inline = False)
-    em.add_field(name = "mrp [FT]",value = "Recommend Moive Feature",inline = False)
-    
-    em.set_thumbnail(url = "https://media2.giphy.com/media/Fo5y4K3GD3RYijvsCS/200.gif")
+    em.add_field(name = "github [FT]",value="Github BOB's BOBCOIN Feature",inline = False)
+    em.set_thumbnail(url = "http://shardacomputerngp.com/images/header/horoscope.gif")
+    em.set_footer(text = "| บ อ ท แ ห่ ง ช น ชั้ น น |",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
+@bot.command()
+async def command(ctx):
+    em = discord.Embed(title = "Info",
+        description = "prefix $\nคำสั่งตามด้วย[TC] = Test Command\nคำสั่งตามด้วย[FT] = Feature Command\nคำสั่งตามด้วย[ECO] = Economy Feature",
+        color = discord.Color.dark_blue())
+    em.set_author(name = "BOBCOIN COMMANDS",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    em.add_field(name = "FT",value = "Feature Command",inline = False)
+    em.add_field(name = "TC",value = "Test Command",inline = False)
+    em.add_field(name = "ECO",value = "Economy Command",inline = False)
+    em.set_thumbnail(url = "https://cdnb.artstation.com/p/assets/images/images/010/982/795/original/valerian-pranata-file2.gif?1527245408")
     em.set_footer(text = "| บ อ ท แ ห่ ง ช น ชั้ น น |",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
     await ctx.send(embed = em)
 @bot.command()
@@ -421,7 +499,6 @@ async def filpcoin(ctx,text=None,amount=None):
     if amount == float:
         await ctx.send("มึงอย่าแม้แต่จะคิด")
         return
-
     bot = random.randint(1,2)
     await ctx.send(bot)
     if bot == 1:
@@ -435,6 +512,9 @@ async def filpcoin(ctx,text=None,amount=None):
 @bot.command()
 async def github(ctx):
     await ctx.send("https://github.com/DEVPOB/BOBCOIN")
-
-
+@bot.command()
+async def footer(ctx):
+    em = discord.Embed(title = "",color = discord.Color.blue())
+    em.set_footer(text = "| บ อ ท แ ห่ ง ช น ชั้ น น |",icon_url = "https://cdn.discordapp.com/attachments/865170212822319114/894807330313621535/Discord.png")
+    await ctx.send(embed = em)
 bot.run('#')
