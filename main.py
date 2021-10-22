@@ -1,8 +1,3 @@
-#880963590289498142 client ID
-#ODgwOTYzNTkwMjg5NDk4MTQy.YSl7Rw.ogiXuL6XzkAyoebhB2u-Y3PV6cc Token
-#8
-#27 May
-from logging import PlaceHolder
 import random
 import asyncio
 from datetime import date, datetime, time,timedelta
@@ -17,7 +12,6 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import discord
-from discord_components import DiscordComponents,Select,SelectOption
 import re
 Intents = discord.Intents.default()
 Intents.members = True
