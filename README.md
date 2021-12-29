@@ -1,3 +1,3 @@
 # BOBCOIN
-BOBCOIN For Discord
+BOBCOIN For Discord |
 This is my first prject of coding
